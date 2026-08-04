@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useT } from "../lib/i18n";
+import { CommandLine } from "./CommandLine";
 
 const GITHUB_URL = "https://github.com/MaximeLeBesnerais/OfficeEditor";
 
@@ -24,7 +25,14 @@ const DECK_JSON = `{
 const TYPING_MS_PER_CHAR = 18;
 const SLIDE_REVEAL_DELAY_MS = 200;
 
-const THUMBNAILS = [
+// All rendered slides shown in the hero; index 0 is the main cover slide,
+// the rest are the thumbnails. Clicking any of them opens the lightbox at
+// that index.
+const SLIDES = [
+  {
+    src: "/assets/slides/slide-001.webp",
+    alt: "Cover slide rendered by OfficeEditor: Fleet intelligence that pays for itself",
+  },
   { src: "/assets/slides/slide-005.webp", alt: "KPI cards slide" },
   { src: "/assets/slides/slide-010.webp", alt: "Bar chart slide" },
   { src: "/assets/slides/slide-013.webp", alt: "Roadmap slide" },
@@ -45,6 +53,107 @@ function Chip({ children, accent = false }: { children: string; accent?: boolean
 }
 
 /**
+ * Full-screen slide viewer. Wraps around at the ends, closes on ESC or
+ * overlay click, and locks body scroll while open. Under
+ * prefers-reduced-motion it appears instantly without the fade.
+ */
+function SlideLightbox({
+  index,
+  onClose,
+  onNavigate,
+}: {
+  index: number;
+  onClose: () => void;
+  onNavigate: (index: number) => void;
+}) {
+  const slide = SLIDES[index];
+  // Lazy init: reduced-motion users start settled, so no transition plays.
+  const [settled, setSettled] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    const raf = window.requestAnimationFrame(() => setSettled(true));
+    return () => window.cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft")
+        onNavigate((index - 1 + SLIDES.length) % SLIDES.length);
+      else if (e.key === "ArrowRight")
+        onNavigate((index + 1) % SLIDES.length);
+    };
+    window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [index, onClose, onNavigate]);
+
+  const navButtonClass =
+    "shrink-0 rounded-md border border-ink-700 bg-ink-900 px-2.5 py-2 font-mono text-sm text-mute transition-colors hover:border-amber-500/50 hover:text-amber-400";
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={slide.alt}
+      onClick={onClose}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-ink-950/90 backdrop-blur-sm transition-opacity duration-200 ${
+        settled ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`flex w-full max-w-5xl items-center gap-2 px-4 transition-transform duration-200 sm:gap-4 ${
+          settled ? "scale-100" : "scale-[0.98]"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          aria-label="Previous slide"
+          onClick={() =>
+            onNavigate((index - 1 + SLIDES.length) % SLIDES.length)
+          }
+          className={navButtonClass}
+        >
+          ←
+        </button>
+        <div className="relative min-w-0 flex-1">
+          <img
+            src={slide.src}
+            alt={slide.alt}
+            width={1440}
+            height={810}
+            className="w-full rounded-md border border-ink-700 shadow-[0_0_80px_-20px_rgba(245,165,36,0.35)]"
+          />
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="absolute top-2 right-2 rounded-md border border-ink-700 bg-ink-950/85 px-2 py-0.5 font-mono text-sm text-mute transition-colors hover:border-amber-500/50 hover:text-amber-400"
+          >
+            ×
+          </button>
+        </div>
+        <button
+          type="button"
+          aria-label="Next slide"
+          onClick={() => onNavigate((index + 1) % SLIDES.length)}
+          className={navButtonClass}
+        >
+          →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Hero: product pitch on the left, signature "JSON → rendered slide"
  * composition on the right. The JSON types itself in on mount (skipping the
  * animation entirely under prefers-reduced-motion), then the rendered slide
@@ -54,7 +163,10 @@ export default function Hero() {
   const t = useT();
   const [typedChars, setTypedChars] = useState(0);
   const [showSlide, setShowSlide] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const typingDone = typedChars >= DECK_JSON.length;
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -130,9 +242,10 @@ export default function Hero() {
             </a>
           </div>
 
-          <p className="mt-5 font-mono text-xs text-faint">
-            {t.hero.cliHint}
-          </p>
+          <CommandLine
+            command="dotnet tool install -g MaximeLB.OfficeEditor.Cli"
+            className="mt-5 max-w-xl"
+          />
         </div>
 
         {/* Right: JSON → slide composition */}
@@ -150,8 +263,17 @@ export default function Hero() {
               </div>
             </div>
             <pre className="overflow-x-auto p-5 font-mono text-[12px] leading-relaxed text-paper/75">
-              {DECK_JSON.slice(0, typedChars)}
-              {!typingDone && <span className="typing-caret" />}
+              <span className="relative block">
+                {/* Invisible full text reserves the final size from first
+                    paint, so the typing overlay never shifts layout. */}
+                <span aria-hidden="true" className="invisible">
+                  {DECK_JSON}
+                </span>
+                <span className="absolute inset-0">
+                  {DECK_JSON.slice(0, typedChars)}
+                  {!typingDone && <span className="typing-caret" />}
+                </span>
+              </span>
             </pre>
           </div>
 
@@ -161,36 +283,56 @@ export default function Hero() {
               showSlide ? "opacity-100 scale-100" : "opacity-0 scale-[0.97]"
             }`}
           >
-            <div className="relative overflow-hidden rounded-md border border-ink-700 shadow-[0_0_80px_-20px_rgba(245,165,36,0.35)]">
-              <img
-                src="/assets/slides/slide-001.webp"
-                alt="Cover slide rendered by OfficeEditor: Fleet intelligence that pays for itself"
-                width={1440}
-                height={810}
-                className="aspect-video w-full"
-              />
+            <div className="relative overflow-hidden rounded-md border border-ink-700 shadow-[0_0_80px_-20px_rgba(245,165,36,0.35)] transition-colors hover:border-amber-500/50">
+              <button
+                type="button"
+                onClick={() => setLightboxIndex(0)}
+                className="block w-full cursor-zoom-in rounded-md focus-visible:outline-2 focus-visible:outline-amber-500"
+              >
+                <img
+                  src={SLIDES[0].src}
+                  alt={SLIDES[0].alt}
+                  width={1440}
+                  height={810}
+                  className="aspect-video w-full"
+                />
+              </button>
               <span className="absolute right-2 bottom-2 rounded-md border border-ink-700 bg-ink-950/85 px-2 py-1 font-mono text-[10px] text-amber-300">
                 {t.hero.slideCaption}
               </span>
             </div>
           </div>
 
-          {/* Decorative thumbnails of other rendered slides */}
+          {/* Thumbnails of the other rendered slides; click opens lightbox */}
           <div className="mt-5 flex gap-2">
-            {THUMBNAILS.map((t) => (
-              <img
-                key={t.src}
-                src={t.src}
-                alt={t.alt}
-                width={1440}
-                height={810}
-                loading="lazy"
-                className="h-14 w-auto rounded border border-ink-700 opacity-70 transition hover:opacity-100"
-              />
+            {SLIDES.slice(1).map((slide, i) => (
+              <button
+                key={slide.src}
+                type="button"
+                onClick={() => setLightboxIndex(i + 1)}
+                className="cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-amber-500"
+              >
+                <img
+                  src={slide.src}
+                  alt={slide.alt}
+                  width={1440}
+                  height={810}
+                  loading="lazy"
+                  className="h-14 w-auto rounded border border-ink-700 opacity-70 transition hover:border-amber-500/50 hover:opacity-100"
+                />
+              </button>
             ))}
           </div>
         </div>
       </div>
+
+      {lightboxIndex !== null && (
+        <SlideLightbox
+          index={lightboxIndex}
+          onClose={closeLightbox}
+          onNavigate={setLightboxIndex}
+        />
+      )}
     </section>
   );
 }

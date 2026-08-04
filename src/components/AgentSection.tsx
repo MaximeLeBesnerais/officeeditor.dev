@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useT } from "../lib/i18n";
 import { Reveal, useInView } from "../lib/reveal";
+import { CommandLine } from "./CommandLine";
 import { Section } from "./Section";
 
 type ToolSlug = "anatomize" | "replaceElement" | "renderSlide" | "generate";
@@ -161,9 +162,10 @@ export default function AgentSection() {
           <div>
             <p className="leading-relaxed text-mute">{t.agents.body}</p>
             <div className="mt-8">{chips}</div>
-            <p className="mt-8 font-mono text-xs text-faint">
-              {t.agents.cliHint}
-            </p>
+            <CommandLine
+              command="dotnet run --project OfficeEditor.Mcp"
+              className="mt-8"
+            />
           </div>
         </Reveal>
         <Reveal delay={120}>
