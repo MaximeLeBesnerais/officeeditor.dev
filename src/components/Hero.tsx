@@ -95,7 +95,7 @@ function SlideLightbox({
   }, [index, onClose, onNavigate]);
 
   const navButtonClass =
-    "shrink-0 rounded-md border border-ink-700 bg-ink-900 px-2.5 py-2 font-mono text-sm text-mute transition-colors hover:border-amber-500/50 hover:text-amber-400";
+    "absolute top-1/2 z-10 -translate-y-1/2 rounded-md border border-ink-700 bg-ink-950/70 px-2.5 py-2 font-mono text-sm text-mute transition-colors hover:border-amber-500/50 hover:text-amber-400";
 
   return (
     <div
@@ -108,22 +108,12 @@ function SlideLightbox({
       }`}
     >
       <div
-        className={`flex w-full max-w-5xl items-center gap-2 px-4 transition-transform duration-200 sm:gap-4 ${
+        className={`w-full max-w-5xl px-4 transition-transform duration-200 ${
           settled ? "scale-100" : "scale-[0.98]"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          type="button"
-          aria-label="Previous slide"
-          onClick={() =>
-            onNavigate((index - 1 + SLIDES.length) % SLIDES.length)
-          }
-          className={navButtonClass}
-        >
-          ←
-        </button>
-        <div className="relative min-w-0 flex-1">
+        <div className="relative">
           <img
             src={slide.src}
             alt={slide.alt}
@@ -133,6 +123,24 @@ function SlideLightbox({
           />
           <button
             type="button"
+            aria-label="Previous slide"
+            onClick={() =>
+              onNavigate((index - 1 + SLIDES.length) % SLIDES.length)
+            }
+            className={`${navButtonClass} left-2`}
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            aria-label="Next slide"
+            onClick={() => onNavigate((index + 1) % SLIDES.length)}
+            className={`${navButtonClass} right-2`}
+          >
+            →
+          </button>
+          <button
+            type="button"
             aria-label="Close"
             onClick={onClose}
             className="absolute top-2 right-2 rounded-md border border-ink-700 bg-ink-950/85 px-2 py-0.5 font-mono text-sm text-mute transition-colors hover:border-amber-500/50 hover:text-amber-400"
@@ -140,14 +148,6 @@ function SlideLightbox({
             ×
           </button>
         </div>
-        <button
-          type="button"
-          aria-label="Next slide"
-          onClick={() => onNavigate((index + 1) % SLIDES.length)}
-          className={navButtonClass}
-        >
-          →
-        </button>
       </div>
     </div>
   );
@@ -197,7 +197,7 @@ export default function Hero() {
     <section className="mx-auto flex min-h-[92vh] w-full max-w-6xl items-center px-6 py-20">
       <div className="grid w-full items-center gap-14 lg:grid-cols-2">
         {/* Left: copy */}
-        <div>
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <Chip accent>v0.7.1</Chip>
             <Chip>.NET 9</Chip>
@@ -249,7 +249,7 @@ export default function Hero() {
         </div>
 
         {/* Right: JSON → slide composition */}
-        <div className="relative">
+        <div className="relative min-w-0">
           {/* Code frame (same chrome as CodeBlock, minus copy button) */}
           <div className="overflow-hidden rounded-md border border-ink-700 bg-ink-900">
             <div className="flex items-center border-b border-ink-700 bg-ink-850 px-4 py-2">
@@ -304,7 +304,7 @@ export default function Hero() {
           </div>
 
           {/* Thumbnails of the other rendered slides; click opens lightbox */}
-          <div className="mt-5 flex gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             {SLIDES.slice(1).map((slide, i) => (
               <button
                 key={slide.src}
