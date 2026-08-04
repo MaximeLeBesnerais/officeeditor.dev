@@ -60,7 +60,7 @@ function TopBar() {
           </a>
           <LanguageSwitcher />
           <a
-            href="https://github.com/MaximeLeBesnerais/OfficeEditor"
+            href={t.meta.repoUrl}
             target="_blank"
             rel="noreferrer"
             className="rounded-md border border-ink-700 px-3 py-1.5 text-paper transition-colors hover:border-amber-500/60 hover:text-amber-400"

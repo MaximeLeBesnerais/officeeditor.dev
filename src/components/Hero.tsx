@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useT } from "../lib/i18n";
 import { CommandLine } from "./CommandLine";
 
-const GITHUB_URL = "https://github.com/MaximeLeBesnerais/OfficeEditor";
 
 const DECK_JSON = `{
   "version": "2.0",
@@ -233,7 +232,7 @@ export default function Hero() {
               {t.hero.ctaPrimary}
             </a>
             <a
-              href={GITHUB_URL}
+              href={t.meta.repoUrl}
               target="_blank"
               rel="noreferrer"
               className="rounded-md border border-ink-700 px-5 py-2.5 text-paper transition hover:border-amber-500/60 hover:text-amber-400"

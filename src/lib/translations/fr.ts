@@ -7,6 +7,7 @@ import type { Translations } from "./en";
 export const fr: Translations = {
   meta: {
     title: "OfficeEditor · Un JSON en entrée. De vrais fichiers Office en sortie.",
+    repoUrl: "https://github.com/MaximeLeBesnerais/OfficeEditor",
   },
   nav: {
     howItWorks: "fonctionnement",

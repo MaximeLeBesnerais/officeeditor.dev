@@ -3,7 +3,8 @@ import { useT } from "../lib/i18n";
 const RESOURCE_LINKS = [
   {
     key: "github",
-    href: "https://github.com/MaximeLeBesnerais/OfficeEditor",
+    // resolved per-locale from t.meta.repoUrl (GitCode mirror for zh)
+    href: null,
   },
   {
     key: "nuget",
@@ -38,16 +39,19 @@ export default function Footer() {
               {t.footer.resourcesTitle}
             </h3>
             <ul className="mt-4 space-y-2">
-              {RESOURCE_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-mute hover:text-amber-400"
-                  >
-                    {t.footer.resources[link.key]}
-                  </a>
-                </li>
-              ))}
+              {RESOURCE_LINKS.map((link) => {
+                const href = link.href ?? t.meta.repoUrl;
+                return (
+                  <li key={link.key}>
+                    <a
+                      href={href}
+                      className="text-sm text-mute hover:text-amber-400"
+                    >
+                      {t.footer.resources[link.key]}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

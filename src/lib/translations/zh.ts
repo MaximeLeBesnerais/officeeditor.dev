@@ -8,13 +8,14 @@ import type { Translations } from "./en";
 export const zh: Translations = {
   meta: {
     title: "OfficeEditor · 一份 JSON 输入，真正的 Office 文件输出。",
+    repoUrl: "https://gitcode.com/xyj_maxime/OfficeEditor",
   },
   nav: {
     howItWorks: "工作原理",
     features: "功能特性",
     agents: "智能体",
     benchmarks: "性能基准",
-    github: "GitHub ↗",
+    github: "GitCode ↗",
   },
   hero: {
     headlineLine1: "一份 JSON 输入。",
@@ -22,7 +23,7 @@ export const zh: Translations = {
     sub: "OfficeEditor 是一套 .NET 9 库，用于创建、编辑、生成和渲染 DOCX、PPTX 和 XLSX：输入声明式 JSON 词汇表，输出真正的 Office 文档。无需 Office，无需 LibreOffice，无需云端往返。",
     formats: ["DOCX", "PPTX", "XLSX"],
     ctaPrimary: "快速上手",
-    ctaGithub: "GitHub ↗",
+    ctaGithub: "GitCode ↗",
     codeFrameTitle: "deck.json",
     slideCaption: "由 TypstBridge 渲染 · 20 毫秒/页",
   },
@@ -117,7 +118,7 @@ export const zh: Translations = {
     version: "v0.7.1 · MIT License",
     resourcesTitle: "资源",
     resources: {
-      github: "GitHub",
+      github: "GitCode",
       nuget: "NuGet 包",
       schema: "PPTX 生成 schema",
       security: "报告安全问题",

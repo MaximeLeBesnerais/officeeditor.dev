@@ -5,6 +5,7 @@
 export const en = {
   meta: {
     title: "OfficeEditor · One JSON in. Real Office files out.",
+    repoUrl: "https://github.com/MaximeLeBesnerais/OfficeEditor",
   },
   nav: {
     howItWorks: "how it works",
