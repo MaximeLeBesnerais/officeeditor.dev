@@ -3,3 +3,9 @@
 
 # Cloudflare Pages
 .wrangler/
+
+# Node / Vite
+node_modules/
+dist/
+*.local
+*.tsbuildinfo

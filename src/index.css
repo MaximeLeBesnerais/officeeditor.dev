@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Electric amber on ink ─────────────────────────────── */
+  --color-ink-950: #0a0a0b;
+  --color-ink-900: #101012;
+  --color-ink-850: #131315;
+  --color-ink-800: #1a1a1e;
+  --color-ink-700: #26262c;
+  --color-ink-600: #3a3a42;
+
+  --color-amber-300: #ffd88a;
+  --color-amber-400: #ffc24d;
+  --color-amber-500: #f5a524;
+  --color-amber-600: #d98a12;
+  --color-ember-500: #e8590c;
+
+  --color-paper: #f5f1e8;
+  --color-mute: #a8a29e;
+  --color-faint: #6b6660;
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink-950 text-paper font-sans antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgb(245 165 36 / 0.06), transparent),
+    radial-gradient(rgb(245 241 232 / 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px;
+}
+
+::selection {
+  background: rgb(245 165 36 / 0.85);
+  color: #0a0a0b;
+}
+
+/* ── Reveal-on-scroll ────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .typing-caret {
+    animation: none !important;
+  }
+}
+
+/* ── Typing caret ────────────────────────────────────────── */
+.typing-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-amber-500);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ── Shiki code blocks ───────────────────────────────────── */
+pre.shiki {
+  @apply overflow-x-auto p-5 text-[13px] leading-relaxed font-mono;
+  background: transparent !important;
+}
+pre.shiki code {
+  font-family: inherit;
+}
+
+/* Thin scrollbar for code blocks */
+pre.shiki::-webkit-scrollbar {
+  height: 6px;
+}
+pre.shiki::-webkit-scrollbar-thumb {
+  background: var(--color-ink-600);
+  border-radius: 3px;
+}
