@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useT } from "../lib/i18n";
 
 const GITHUB_URL = "https://github.com/MaximeLeBesnerais/OfficeEditor";
 
@@ -50,6 +51,7 @@ function Chip({ children, accent = false }: { children: string; accent?: boolean
  * fades in over the code frame.
  */
 export default function Hero() {
+  const t = useT();
   const [typedChars, setTypedChars] = useState(0);
   const [showSlide, setShowSlide] = useState(false);
   const typingDone = typedChars >= DECK_JSON.length;
@@ -85,28 +87,25 @@ export default function Hero() {
         {/* Left: copy */}
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <Chip accent>v0.7.0</Chip>
+            <Chip accent>v0.7.1</Chip>
             <Chip>.NET 9</Chip>
             <Chip>MIT</Chip>
           </div>
 
           <h1 className="mt-6 text-5xl font-semibold tracking-tight text-paper sm:text-6xl">
-            One JSON in.
+            {t.hero.headlineLine1}
             <br />
             <span className="bg-gradient-to-r from-amber-400 to-ember-500 bg-clip-text text-transparent">
-              Real Office files out.
+              {t.hero.headlineLine2}
             </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-mute">
-            OfficeEditor is a .NET 9 suite that creates, edits, generates and
-            renders DOCX, PPTX and XLSX: declarative JSON vocabularies in,
-            genuine Office documents out. No Office, no LibreOffice, no cloud
-            round-trip.
+            {t.hero.sub}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs text-mute">
-            {["DOCX", "PPTX", "XLSX"].map((fmt) => (
+            {t.hero.formats.map((fmt) => (
               <span key={fmt} className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 bg-amber-500" />
                 {fmt}
@@ -119,7 +118,7 @@ export default function Hero() {
               href="#quickstart"
               className="rounded-md bg-amber-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-amber-400"
             >
-              Get started
+              {t.hero.ctaPrimary}
             </a>
             <a
               href={GITHUB_URL}
@@ -127,12 +126,12 @@ export default function Hero() {
               rel="noreferrer"
               className="rounded-md border border-ink-700 px-5 py-2.5 text-paper transition hover:border-amber-500/60 hover:text-amber-400"
             >
-              GitHub ↗
+              {t.hero.ctaGithub}
             </a>
           </div>
 
           <p className="mt-5 font-mono text-xs text-faint">
-            $ dotnet tool install -g MaximeLB.OfficeEditor.Cli
+            {t.hero.cliHint}
           </p>
         </div>
 
@@ -146,7 +145,7 @@ export default function Hero() {
                 <span className="h-2.5 w-2.5 rounded-full bg-ink-600" />
                 <span className="h-2.5 w-2.5 rounded-full bg-amber-500/70" />
                 <span className="ml-3 font-mono text-xs text-mute">
-                  deck.json
+                  {t.hero.codeFrameTitle}
                 </span>
               </div>
             </div>
@@ -171,7 +170,7 @@ export default function Hero() {
                 className="aspect-video w-full"
               />
               <span className="absolute right-2 bottom-2 rounded-md border border-ink-700 bg-ink-950/85 px-2 py-1 font-mono text-[10px] text-amber-300">
-                rendered by TypstBridge · 20 ms/slide
+                {t.hero.slideCaption}
               </span>
             </div>
           </div>

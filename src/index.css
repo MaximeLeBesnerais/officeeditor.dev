@@ -19,8 +19,10 @@
   --color-mute: #a8a29e;
   --color-faint: #6b6660;
 
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", monospace;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC";
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", monospace,
+    "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC";
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }

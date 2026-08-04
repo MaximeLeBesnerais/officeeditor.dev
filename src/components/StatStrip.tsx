@@ -1,3 +1,4 @@
+import { useT } from "../lib/i18n";
 import { useCountUp, useInView } from "../lib/reveal";
 
 type Stat = {
@@ -7,11 +8,12 @@ type Stat = {
   sub: string;
 };
 
-const STATS: Stat[] = [
-  { target: 38, suffix: "×", label: "faster than LibreOffice", sub: "PPTX render, warm median" },
-  { target: 3200, suffix: "+", label: "automated tests", sub: "83% coverage CI gate" },
-  { target: 3, suffix: "", label: "Office formats", sub: "one generation model" },
-  { target: 20, suffix: " ms", label: "per slide rendered", sub: "native Typst bridge" },
+// Numbers and suffixes are data, not copy; labels/subs come from the dictionary.
+const STAT_VALUES: { target: number; suffix: string }[] = [
+  { target: 38, suffix: "×" },
+  { target: 3200, suffix: "+" },
+  { target: 3, suffix: "" },
+  { target: 20, suffix: " ms" },
 ];
 
 function StatCell({ stat, start }: { stat: Stat; start: boolean }) {
@@ -39,11 +41,19 @@ function StatCell({ stat, start }: { stat: Stat; start: boolean }) {
  */
 export default function StatStrip() {
   const { ref, inView } = useInView<HTMLDivElement>(0.3);
+  const t = useT();
+
+  const stats: Stat[] = [
+    { ...STAT_VALUES[0], ...t.stats.speed },
+    { ...STAT_VALUES[1], ...t.stats.tests },
+    { ...STAT_VALUES[2], ...t.stats.formats },
+    { ...STAT_VALUES[3], ...t.stats.perSlide },
+  ];
 
   return (
     <section ref={ref} className="border-y border-ink-700 bg-ink-900/50">
       <div className="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4 md:divide-x md:divide-ink-700">
-        {STATS.map((stat) => (
+        {stats.map((stat) => (
           <StatCell key={stat.label} stat={stat} start={inView} />
         ))}
       </div>

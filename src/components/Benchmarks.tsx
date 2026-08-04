@@ -1,5 +1,6 @@
 import { Section } from "./Section";
 import { useInView } from "../lib/reveal";
+import { useT } from "../lib/i18n";
 
 type Deck = {
   name: string;
@@ -76,14 +77,15 @@ function Bar({
 }
 
 export default function Benchmarks() {
+  const t = useT();
   const { ref, inView } = useInView<HTMLDivElement>(0.2);
 
   return (
     <Section
       id="benchmarks"
-      eyebrow="benchmarks"
-      title="Native rendering, measured"
-      intro="OfficeEditor's Typst pipeline vs headless LibreOffice: same decks, same artifacts, warm medians on Apple Silicon. LibreOffice can't rasterize PPTX, so its total includes pdftoppm."
+      eyebrow={t.benchmarks.eyebrow}
+      title={t.benchmarks.title}
+      intro={t.benchmarks.intro}
     >
       <div ref={ref}>
         {DECKS.map((deck) => (
@@ -94,7 +96,7 @@ export default function Benchmarks() {
             <div className="mb-3 flex items-baseline gap-3">
               <span className="font-mono text-sm text-paper">{deck.name}</span>
               <span className="text-xs text-faint">
-                {deck.slides} slides
+                {deck.slides} {t.benchmarks.slidesUnit}
               </span>
               <span className="ml-auto rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-xs text-amber-400">
                 {deck.speedup}
@@ -119,8 +121,7 @@ export default function Benchmarks() {
           </div>
         ))}
         <p className="mt-6 font-mono text-[11px] text-faint">
-          median of 5 warm runs · whole-deck render incl. rasterization ·
-          reproduce: dotnet run --project tools/pptx-benchmark
+          {t.benchmarks.footnote}
         </p>
       </div>
     </Section>

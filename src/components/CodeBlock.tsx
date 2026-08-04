@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getHighlighter } from "../lib/shiki";
+import { useT } from "../lib/i18n";
 
 /**
  * Shiki-highlighted code block in a dark chrome window frame, with copy button.
@@ -18,6 +19,7 @@ export function CodeBlock({
 }) {
   const [html, setHtml] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     let cancelled = false;
@@ -63,7 +65,7 @@ export function CodeBlock({
           className="font-mono text-xs text-faint transition-colors hover:text-amber-400"
           aria-label="Copy code"
         >
-          {copied ? "copied ✓" : "copy"}
+          {copied ? t.codeblock.copied : t.codeblock.copy}
         </button>
       </div>
       {html ? (

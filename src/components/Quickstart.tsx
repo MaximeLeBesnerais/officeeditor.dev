@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useT } from "../lib/i18n";
 import { Reveal } from "../lib/reveal";
 import { CodeBlock } from "./CodeBlock";
 import { Section } from "./Section";
@@ -53,13 +54,14 @@ const JSON_CODE = `{
   ]
 }`;
 
+// Code snippets are not translated; frame titles come from t.quickstart.
 const TAB_CONTENT: Record<
   TabId,
-  { code: string; lang: "csharp" | "json" | "bash"; title: string }
+  { code: string; lang: "csharp" | "json" | "bash" }
 > = {
-  cli: { code: CLI_CODE, lang: "bash", title: "terminal" },
-  csharp: { code: CSHARP_CODE, lang: "csharp", title: "Program.cs" },
-  json: { code: JSON_CODE, lang: "json", title: "kpi-row slide" },
+  cli: { code: CLI_CODE, lang: "bash" },
+  csharp: { code: CSHARP_CODE, lang: "csharp" },
+  json: { code: JSON_CODE, lang: "json" },
 };
 
 const PACKAGES = [
@@ -70,14 +72,21 @@ const PACKAGES = [
 ];
 
 export default function Quickstart() {
+  const t = useT();
   const [tab, setTab] = useState<TabId>("cli");
   const active = TAB_CONTENT[tab];
+
+  const frameTitles: Record<TabId, string> = {
+    cli: t.quickstart.frameTitles.terminal,
+    csharp: t.quickstart.frameTitles.program,
+    json: t.quickstart.frameTitles.kpiSlide,
+  };
 
   return (
     <Section
       id="quickstart"
-      eyebrow="quickstart"
-      title="From zero to a rendered document in a minute"
+      eyebrow={t.quickstart.eyebrow}
+      title={t.quickstart.title}
     >
       <Reveal>
         <div className="flex gap-6 border-b border-ink-700">
@@ -97,7 +106,11 @@ export default function Quickstart() {
           ))}
         </div>
         <div className="mt-6">
-          <CodeBlock code={active.code} lang={active.lang} title={active.title} />
+          <CodeBlock
+            code={active.code}
+            lang={active.lang}
+            title={frameTitles[tab]}
+          />
         </div>
         <div className="mt-8 flex flex-wrap items-center gap-2">
           {PACKAGES.map((pkg) => (
@@ -106,7 +119,7 @@ export default function Quickstart() {
               className="rounded-md border border-ink-700 px-3 py-1.5 font-mono text-xs text-mute"
             >
               <span className="mr-1.5 text-amber-500">◆</span>
-              {pkg} <span className="text-faint">0.7.0</span>
+              {pkg} <span className="text-faint">0.7.1</span>
             </span>
           ))}
           <a
@@ -115,7 +128,7 @@ export default function Quickstart() {
             rel="noopener noreferrer"
             className="ml-1 font-mono text-xs text-amber-400 transition-colors hover:text-amber-300"
           >
-            on NuGet →
+            {t.quickstart.nuget}
           </a>
         </div>
       </Reveal>

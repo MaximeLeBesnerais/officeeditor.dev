@@ -1,3 +1,4 @@
+import { useT } from "../lib/i18n";
 import { Reveal } from "../lib/reveal";
 import { Section } from "./Section";
 
@@ -69,28 +70,31 @@ function Arrow() {
  * flexbox flow diagram (no image, no SVG paths).
  */
 export default function Pipeline() {
+  const t = useT();
+  const nodes = t.pipeline.nodes;
+
   return (
     <Section
       id="how-it-works"
-      eyebrow="how it works"
-      title="Layout once. Emit twice."
-      intro="A single pure-C# layout pass feeds two emitters: OOXML for delivery, Typst for preview. No second layout engine, no drift between what you ship and what you see."
+      eyebrow={t.pipeline.eyebrow}
+      title={t.pipeline.title}
+      intro={t.pipeline.intro}
     >
       <div className="flex flex-col items-center justify-center lg:flex-row">
         <Reveal delay={0}>
-          <Node name="JSON vocabulary" accent />
+          <Node name={nodes.json.name} accent />
         </Reveal>
         <Reveal delay={60}>
           <Arrow />
         </Reveal>
         <Reveal delay={100}>
-          <Node name="Loud validator" sub="field-path errors + suggestions" />
+          <Node name={nodes.validator.name} sub={nodes.validator.sub} />
         </Reveal>
         <Reveal delay={160}>
           <Arrow />
         </Reveal>
         <Reveal delay={200}>
-          <Node name="Layout resolver" sub="pure C#, once" />
+          <Node name={nodes.layout.name} sub={nodes.layout.sub} />
         </Reveal>
         <Reveal delay={260}>
           <Arrow />
@@ -100,24 +104,24 @@ export default function Pipeline() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center lg:flex-row">
             <Reveal delay={350}>
-              <Node name="OOXML emitter" />
+              <Node name={nodes.ooxml.name} />
             </Reveal>
             <Reveal delay={420}>
               <Arrow />
             </Reveal>
             <Reveal delay={500}>
-              <OutputChip variant="amber">.pptx · .docx · .xlsx</OutputChip>
+              <OutputChip variant="amber">{t.pipeline.outputs.office}</OutputChip>
             </Reveal>
           </div>
           <div className="flex flex-col items-center lg:flex-row">
             <Reveal delay={500}>
-              <Node name="Typst emitter" />
+              <Node name={nodes.typst.name} />
             </Reveal>
             <Reveal delay={570}>
               <Arrow />
             </Reveal>
             <Reveal delay={650}>
-              <OutputChip variant="neutral">PDF · PNG · SVG</OutputChip>
+              <OutputChip variant="neutral">{t.pipeline.outputs.preview}</OutputChip>
             </Reveal>
           </div>
         </div>
@@ -125,8 +129,7 @@ export default function Pipeline() {
 
       <Reveal delay={750}>
         <p className="mt-12 text-center font-mono text-xs text-faint">
-          Every primitive ships with both emitters + a parity fixture. No
-          half-tested features.
+          {t.pipeline.caption}
         </p>
       </Reveal>
     </Section>
