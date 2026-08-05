@@ -1,47 +1,12 @@
 import { Section } from "./Section";
 import { useInView } from "../lib/reveal";
 import { useT } from "../lib/i18n";
-
-type Deck = {
-  name: string;
-  slides: number;
-  oeMs: number;
-  loMs: number;
-  speedup: string;
-};
-
-const DECKS: Deck[] = [
-  {
-    name: "sales_acceleration_deck",
-    slides: 16,
-    oeMs: 329.4,
-    loMs: 5924.0,
-    speedup: "~18.0×",
-  },
-  {
-    name: "AetherLink shareholder overview",
-    slides: 15,
-    oeMs: 417.4,
-    loMs: 15940.3,
-    speedup: "~38.2×",
-  },
-  {
-    name: "northwind-launch-review",
-    slides: 12,
-    oeMs: 102.5,
-    loMs: 2034.2,
-    speedup: "~19.8×",
-  },
-  {
-    name: "northwind-investor-40",
-    slides: 40,
-    oeMs: 322.2,
-    loMs: 5629.7,
-    speedup: "~17.5×",
-  },
-];
-
-const MAX_LO = 15940.3;
+import {
+  BENCHMARKS,
+  MAX_LO_TOTAL_MS,
+  conversionSpeedup,
+  fullPathSpeedup,
+} from "../lib/benchmarks";
 
 function formatMs(ms: number) {
   return `${Math.round(ms).toLocaleString("en-US")} ms`;
@@ -88,38 +53,63 @@ export default function Benchmarks() {
       intro={t.benchmarks.intro}
     >
       <div ref={ref}>
-        {DECKS.map((deck) => (
+        {BENCHMARKS.map((deck) => (
           <div
-            key={deck.name}
+            key={deck.slug}
             className="border-b border-ink-800 py-5 last:border-0"
           >
-            <div className="mb-3 flex items-baseline gap-3">
-              <span className="font-mono text-sm text-paper">{deck.name}</span>
-              <span className="text-xs text-faint">
-                {deck.slides} {t.benchmarks.slidesUnit}
+            <div className="mb-3 flex flex-wrap items-baseline gap-3">
+              <span className="font-mono text-sm text-paper">
+                {deck.displayName}
               </span>
-              <span className="ml-auto rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-xs text-amber-400">
-                {deck.speedup}
+              <span className="text-xs text-faint">
+                {deck.slideCount} {t.benchmarks.slidesUnit}
+              </span>
+              <span className="ml-auto flex flex-wrap gap-2">
+                <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-xs text-amber-400">
+                  {fullPathSpeedup(deck).toFixed(1)}×
+                </span>
+                <span className="rounded-md border border-ink-600 px-2 py-0.5 font-mono text-xs text-mute">
+                  {conversionSpeedup(deck).toFixed(1)}×{" "}
+                  {t.benchmarks.chipConversion}
+                </span>
               </span>
             </div>
             <div className="flex flex-col gap-1.5">
               <Bar
                 label="OfficeEditor"
-                ms={deck.oeMs}
-                widthPct={(deck.oeMs / MAX_LO) * 100}
+                ms={deck.oePngTotalMs}
+                widthPct={(deck.oePngTotalMs / MAX_LO_TOTAL_MS) * 100}
                 fill="bg-gradient-to-r from-amber-500 to-amber-400"
                 inView={inView}
               />
               <Bar
                 label="LibreOffice"
-                ms={deck.loMs}
-                widthPct={(deck.loMs / MAX_LO) * 100}
+                ms={deck.loTotalMs}
+                widthPct={(deck.loTotalMs / MAX_LO_TOTAL_MS) * 100}
                 fill="bg-ink-600"
                 inView={inView}
               />
             </div>
           </div>
         ))}
+
+        {/* SVG preview path callout */}
+        <div className="mt-6 rounded-md border border-amber-500/30 bg-amber-500/5 p-5">
+          <p className="font-mono text-xs text-amber-400">
+            {t.benchmarks.svg.label}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-mute">
+            {t.benchmarks.svg.body}
+          </p>
+        </div>
+
+        {/* Fidelity note */}
+        <p className="mt-5 font-mono text-[11px] text-faint">
+          {t.benchmarks.fidelity.label}
+        </p>
+        <p className="mt-1 text-sm text-mute">{t.benchmarks.fidelity.body}</p>
+
         <p className="mt-6 font-mono text-[11px] text-faint">
           {t.benchmarks.footnote}
         </p>

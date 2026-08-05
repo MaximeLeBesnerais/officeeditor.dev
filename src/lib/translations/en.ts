@@ -22,13 +22,13 @@ export const en = {
     ctaPrimary: "Get started",
     ctaGithub: "GitHub ↗",
     codeFrameTitle: "deck.json",
-    slideCaption: "rendered by TypstBridge · 20 ms/slide",
+    slideCaption: "rendered by TypstBridge · 34 ms/slide",
   },
   stats: {
-    speed: { label: "faster than LibreOffice", sub: "PPTX render, warm median" },
+    speed: { label: "faster than LibreOffice", sub: "full pipeline, warm median" },
     tests: { label: "automated tests", sub: "83% coverage CI gate" },
     formats: { label: "Office formats", sub: "one generation model" },
-    perSlide: { label: "per slide rendered", sub: "native Typst bridge" },
+    perSlide: { label: "per slide, SVG preview", sub: "native Typst bridge" },
   },
   pipeline: {
     eyebrow: "how it works",
@@ -106,9 +106,18 @@ export const en = {
   benchmarks: {
     eyebrow: "benchmarks",
     title: "Native rendering, measured",
-    intro: "OfficeEditor's Typst pipeline vs headless LibreOffice: same decks, same artifacts, warm medians on Apple Silicon. LibreOffice can't rasterize PPTX, so its total includes pdftoppm.",
+    intro: "OfficeEditor's Typst pipeline vs headless LibreOffice: same decks, same PNG artifacts, measured warm medians on Apple Silicon. Rasterization is 78–85% of LibreOffice's time, and pdftoppm gets no benefit from warm-up: a flat ~450 ms-per-slide tax. Even LibreOffice's conversion leg alone, the part it is designed for, runs 2.4–6.7× slower.",
     slidesUnit: "slides",
-    footnote: "median of 5 warm runs · whole-deck render incl. rasterization · reproduce: dotnet run --project tools/pptx-benchmark",
+    chipConversion: "vs conversion alone",
+    svg: {
+      label: "SVG preview path",
+      body: "The same layout emits SVG at 2.4–3.5 ms per slide, flat across decks: 76–411× faster than LibreOffice's full path, in a vector format LibreOffice can't produce natively. This is the artifact web previews and agent loops actually want.",
+    },
+    fidelity: {
+      label: "// fidelity",
+      body: "Every generation primitive ships with a parity fixture: one layout, emitted as OOXML and Typst, gated on per-primitive normalized-RMSE thresholds (4–12%) against PowerPoint ground-truth renders.",
+    },
+    footnote: "warm medians, N=20 (OfficeEditor) / N=5 (LibreOffice) · Apple Silicon · LibreOffice 26.2.5.2, poppler 26.07.0 · LO total = PDF conversion + pdftoppm rasterization at 150dpi · reproduce: dotnet run --project tools/pptx-benchmark",
   },
   footer: {
     tagline: "One JSON in. Real Office files out.",

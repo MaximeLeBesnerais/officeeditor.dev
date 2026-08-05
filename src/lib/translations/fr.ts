@@ -24,13 +24,13 @@ export const fr: Translations = {
     ctaPrimary: "Commencer",
     ctaGithub: "GitHub ↗",
     codeFrameTitle: "deck.json",
-    slideCaption: "rendu par TypstBridge · 20 ms/diapositive",
+    slideCaption: "rendu par TypstBridge · 34 ms/diapositive",
   },
   stats: {
-    speed: { label: "plus rapide que LibreOffice", sub: "rendu PPTX, médiane à chaud" },
+    speed: { label: "plus rapide que LibreOffice", sub: "pipeline complet, médiane à chaud" },
     tests: { label: "tests automatisés", sub: "seuil CI de 83 % de couverture" },
     formats: { label: "formats Office", sub: "un seul modèle de génération" },
-    perSlide: { label: "par diapositive rendue", sub: "pont Typst natif" },
+    perSlide: { label: "par diapositive, aperçu SVG", sub: "pont Typst natif" },
   },
   pipeline: {
     eyebrow: "fonctionnement",
@@ -108,9 +108,18 @@ export const fr: Translations = {
   benchmarks: {
     eyebrow: "benchmarks",
     title: "Rendu natif, mesuré",
-    intro: "Le pipeline Typst d'OfficeEditor face à LibreOffice headless : mêmes présentations, mêmes artefacts, médianes à chaud sur Apple Silicon. LibreOffice ne sait pas rastériser le PPTX, son total inclut donc pdftoppm.",
+    intro: "Le pipeline Typst d'OfficeEditor face à LibreOffice headless : mêmes présentations, mêmes artefacts PNG, médianes à chaud mesurées sur Apple Silicon. La rastérisation représente 78 à 85 % du temps de LibreOffice, et pdftoppm ne profite pas du préchauffage : une taxe fixe d'environ 450 ms par diapositive. Même l'étape de conversion seule, celle pour laquelle LibreOffice est conçu, s'exécute 2,4 à 6,7 fois plus lentement.",
     slidesUnit: "diapositives",
-    footnote: "médiane de 5 exécutions à chaud · rendu complet de la présentation, rastérisation incluse · reproduction : dotnet run --project tools/pptx-benchmark",
+    chipConversion: "vs conversion seule",
+    svg: {
+      label: "Chemin d'aperçu SVG",
+      body: "La même mise en page émet du SVG en 2,4 à 3,5 ms par diapositive, constant d'une présentation à l'autre : 76 à 411 fois plus rapide que le chemin complet de LibreOffice, dans un format vectoriel que LibreOffice ne sait pas produire nativement. C'est l'artefact que les aperçus web et les boucles d'agents attendent vraiment.",
+    },
+    fidelity: {
+      label: "// fidélité",
+      body: "Chaque primitive de génération est livrée avec un jeu de tests de parité : une mise en page, émise en OOXML et en Typst, validée par des seuils de RMSE normalisé par primitive (4 à 12 %) face à des rendus PowerPoint de référence.",
+    },
+    footnote: "médianes à chaud, N=20 (OfficeEditor) / N=5 (LibreOffice) · Apple Silicon · LibreOffice 26.2.5.2, poppler 26.07.0 · total LO = conversion PDF + rastérisation pdftoppm à 150 dpi · reproduction : dotnet run --project tools/pptx-benchmark",
   },
   footer: {
     tagline: "Un JSON en entrée. De vrais fichiers Office en sortie.",
