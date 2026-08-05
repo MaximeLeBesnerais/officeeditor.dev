@@ -1,6 +1,6 @@
 import { useT } from "../lib/i18n";
 import { useCountUp, useInView } from "../lib/reveal";
-import { MAX_FULL_PATH_SPEEDUP, SVG_PER_SLIDE_MS } from "../lib/benchmarks";
+import { MAX_PDF_SPEEDUP, SVG_PER_SLIDE_MS } from "../lib/benchmarks";
 
 type Stat = {
   target: number;
@@ -12,7 +12,7 @@ type Stat = {
 // Numbers and suffixes are data, not copy; labels/subs come from the dictionary.
 // Speed and per-slide targets derive from the verified benchmark baselines.
 const STAT_VALUES: { target: number; suffix: string }[] = [
-  { target: MAX_FULL_PATH_SPEEDUP, suffix: "×" },
+  { target: MAX_PDF_SPEEDUP, suffix: "×" },
   { target: 3200, suffix: "+" },
   { target: 3, suffix: "" },
   { target: SVG_PER_SLIDE_MS, suffix: " ms" },

@@ -28,7 +28,7 @@ export const zh: Translations = {
     slideCaption: "由 TypstBridge 渲染 · 23 毫秒/页",
   },
   stats: {
-    speed: { label: "快于 LibreOffice", sub: "完整管线，热中位数" },
+    speed: { label: "快于 LibreOffice", sub: "PDF 转换，热中位数" },
     tests: { label: "自动化测试", sub: "CI 覆盖率门禁 83%" },
     formats: { label: "Office 格式", sub: "同一套生成模型" },
     perSlide: { label: "每页幻灯片，SVG 预览", sub: "原生 Typst 桥接" },
@@ -109,18 +109,21 @@ export const zh: Translations = {
   benchmarks: {
     eyebrow: "性能基准",
     title: "原生渲染，用数据说话",
-    intro: "OfficeEditor 的 Typst 管线对比无头 LibreOffice：相同演示文稿、相同 PNG 产物，取 Apple Silicon 上的热中位数。栅格化占 LibreOffice 总耗时的 65–85%，且 pdftoppm 无法从预热中获益：相当于每页幻灯片固定 114–902 毫秒的额外开销，预热也无法降低。即便只算 LibreOffice 最擅长的转换环节，也要慢 2.4–7.3 倍。",
+    intro: "OfficeEditor 对比无头 LibreOffice，逐项对等：PDF 对 PDF，PNG 对完整栅格化路径，均在 Apple Silicon 上取热数据实测。即便是 LibreOffice 最擅长的一环，也就是它专为设计的 PDF 转换，也要慢 22–102 倍。",
     slidesUnit: "页幻灯片",
-    chipConversion: "对比仅转换环节",
+    duelQualifiers: {
+      lo: "soffice + pdftoppm",
+      oe: "原生，一次编译",
+    },
     svg: {
       label: "SVG 预览路径",
-      body: "同一布局输出 SVG 仅需每页 1.6–2.4 毫秒，在各演示文稿间保持稳定：比 LibreOffice 的完整路径快 65–370 倍，而且还是 LibreOffice 无法原生生成的矢量格式。这才是 Web 预览和智能体循环真正需要的产物。",
+      body: "同一布局输出 SVG 每页仅需 1.6–2.4 毫秒，整份演示文稿仅需 21–65 毫秒：比 LibreOffice 的栅格化路径快 65–370 倍，而且还是 LibreOffice 无法原生生成的矢量格式。这才是 Web 预览和智能体循环真正需要的产物。",
     },
     fidelity: {
       label: "// 保真度",
       body: "每个生成原语都附带对等性测试夹具：同一布局分别输出为 OOXML 和 Typst，并以 PowerPoint 基准渲染为参照，按原语施加归一化 RMSE 阈值（4–12%）门禁。",
     },
-    footnote: "热中位数，N=50（OfficeEditor，冷启动 N=10）/ N=50（LibreOffice，冷启动 N=10）· Apple Silicon · LibreOffice 26.2.5.2、poppler 26.07.0 · LO 总耗时 = PDF 转换 + pdftoppm 以 150dpi 栅格化 · 复现方式：dotnet run --project tools/pptx-benchmark",
+    footnote: "热中位数，N=50（冷启动 N=10）· Apple Silicon · LibreOffice 26.2.5.2、poppler 26.07.0 · LO 各环节包含完整进程启动开销；OE 各环节为进程内热编译，即便冷启动 OE PDF 仍领先 22–43 倍 · 复现方式：dotnet run --project tools/pptx-benchmark",
   },
   footer: {
     tagline: "一份 JSON 输入，真正的 Office 文件输出。",
