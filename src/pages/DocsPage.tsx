@@ -325,9 +325,9 @@ export default function DocsPage() {
             </P>
             <CommandLine command="dotnet tool install -g MaximeLB.OfficeEditor.Cli" />
             <Note title="grounding">
-              This page mirrors the engine, not a wishlist. Square slides, doc-relative image
-              paths and the <Code>edit</Code> command are not supported today — each limitation is
-              called out where it matters.
+              This page mirrors the engine, not a wishlist. Square slides and the{" "}
+              <Code>edit</Code> command are not supported today — each limitation is called out
+              where it matters.
             </Note>
           </DocsSection>
 
@@ -698,7 +698,7 @@ export default function DocsPage() {
                 ],
                 [
                   <Code key="i3">relative/path.png</Code>,
-                  "Resolved against the repository root first, then the process working directory. Supported extensions: .png, .jpg, .jpeg, .gif, .bmp, .tiff, .tif, .svg.",
+                  "Resolved against the JSON document's directory only — no repo-root or CWD fallback. Supported extensions: .png, .jpg, .jpeg, .gif, .bmp, .tiff, .tif, .svg.",
                 ],
                 [
                   <Code key="i4">http(s)://…</Code>,
@@ -728,10 +728,13 @@ export default function DocsPage() {
               ]}
             />
             <CodeBlock code={IMAGE_EXAMPLE} lang="json" title="image with a 10% source crop" />
-            <Note title="known limitation — paths are not JSON-relative">
-              Relative image paths resolve against the repository root, then the current working
-              directory — <b>not</b> against the directory of the JSON file. If your deck.json lives
-              in a subfolder, address images from the repo root or CWD (or use absolute paths).
+            <Note title="relative src is document-relative">
+              A relative <Code>src</Code> resolves against the directory of the JSON document
+              itself — there is no repo-root or CWD fallback. Keep image files next to the deck
+              you generate (or use an absolute path or data URI). On string-only surfaces (the{" "}
+              <Code>deck_generate</Code> MCP tool, <Code>/api/decks/generate</Code>) there is no
+              document directory, so a relative path fails with a loud error — pass a data URI or
+              an absolute path instead.
             </Note>
           </DocsSection>
 
