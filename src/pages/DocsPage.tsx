@@ -325,9 +325,8 @@ export default function DocsPage() {
             </P>
             <CommandLine command="dotnet tool install -g MaximeLB.OfficeEditor.Cli" />
             <Note title="grounding">
-              This page mirrors the engine, not a wishlist. Square slides and the{" "}
-              <Code>edit</Code> command are not supported today — each limitation is called out
-              where it matters.
+              This page mirrors the engine, not a wishlist. The <Code>edit</Code> command is not
+              supported today — each limitation is called out where it matters.
             </Note>
           </DocsSection>
 
@@ -349,9 +348,11 @@ export default function DocsPage() {
                 ],
                 [
                   <Code key="ss">slideSize</Code>,
-                  <Code>"16:9" | "4:3"</Code>,
+                  <>
+                    <Code>"16:9" | "4:3"</Code> or <Code>{"{ width, height }"}</Code>
+                  </>,
                   "no (default \"16:9\")",
-                  "Slide canvas: 16:9 = 960×540 pt, 4:3 = 720×540 pt.",
+                  "Slide canvas in pt. Presets: 16:9 = 960×540, 4:3 = 720×540; object form takes explicit width/height in pt (each 1–4032, no extra properties).",
                 ],
                 [
                   <Code key="d">design</Code>,
@@ -368,11 +369,13 @@ export default function DocsPage() {
               ]}
             />
             <CodeBlock code={DECK_MINIMAL} lang="json" title="deck.json — minimal deck" />
-            <Note title="square slides — not supported">
-              <Code>slideSize</Code> accepts only <Code>"16:9"</Code> or <Code>"4:3"</Code>.
-              Square / 1:1 slides are <b>not</b> yet supported: any other value (including{" "}
-              <Code>"1:1"</Code> or <Code>"square"</Code>) fails validation with a loud error that
-              lists the valid values.
+            <Note title="slide size — presets or explicit points">
+              <Code>slideSize</Code> is a oneOf: a preset string — <Code>"16:9"</Code> (default,{" "}
+              960×540 pt) or <Code>"4:3"</Code> (720×540 pt) — or an object with explicit{" "}
+              <Code>width</Code> and <Code>height</Code> in points, each a finite number from 1 to
+              4032, with no extra properties. Any other shape fails validation with a loud
+              JSON-path error. Square slides are now a one-liner:{" "}
+              <Code>{"{ \"width\": 540, \"height\": 540 }"}</Code>.
             </Note>
             <UL
               items={[
