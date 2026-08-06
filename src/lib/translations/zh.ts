@@ -15,7 +15,11 @@ export const zh: Translations = {
     features: "功能特性",
     agents: "智能体",
     benchmarks: "性能基准",
+    docs: "文档",
     github: "GitCode ↗",
+  },
+  docsPage: {
+    home: "← 首页",
   },
   hero: {
     headlineLine1: "一份 JSON 输入。",
@@ -133,6 +137,7 @@ export const zh: Translations = {
       github: "GitCode",
       nuget: "NuGet 包",
       schema: "PPTX 生成 schema",
+      docs: "文档",
       security: "报告安全问题",
     },
     surfacesTitle: "使用形态",

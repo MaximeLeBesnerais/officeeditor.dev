@@ -14,7 +14,11 @@ export const fr: Translations = {
     features: "fonctionnalités",
     agents: "agents",
     benchmarks: "benchmarks",
+    docs: "docs",
     github: "GitHub ↗",
+  },
+  docsPage: {
+    home: "← accueil",
   },
   hero: {
     headlineLine1: "Un JSON en entrée.",
@@ -132,6 +136,7 @@ export const fr: Translations = {
       github: "GitHub",
       nuget: "Packages NuGet",
       schema: "Schéma de génération PPTX",
+      docs: "Documentation",
       security: "Signaler un problème de sécurité",
     },
     surfacesTitle: "Surfaces",

@@ -12,7 +12,11 @@ export const en = {
     features: "features",
     agents: "agents",
     benchmarks: "benchmarks",
+    docs: "docs",
     github: "GitHub ↗",
+  },
+  docsPage: {
+    home: "← home",
   },
   hero: {
     headlineLine1: "One JSON in.",
@@ -130,6 +134,7 @@ export const en = {
       github: "GitHub",
       nuget: "NuGet packages",
       schema: "PPTX generation schema",
+      docs: "Docs",
       security: "Report a security issue",
     },
     surfacesTitle: "Surfaces",

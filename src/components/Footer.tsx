@@ -10,6 +10,7 @@ const RESOURCE_LINKS = [
     key: "nuget",
     href: "https://www.nuget.org/packages?q=MaximeLB",
   },
+  { key: "docs", href: "#/docs" },
   { key: "schema", href: "/schemas/deck-2.0.json" },
   {
     key: "security",
